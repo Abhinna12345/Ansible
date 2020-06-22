@@ -1,0 +1,6 @@
+---
+- hosts: all
+  connection: winrm
+  tasks:
+  - name: Install all security, critical, and rollup updates
+    win_shell: C:\PowerShell\GetUser.ps1 >> C:\GetUser.txt
