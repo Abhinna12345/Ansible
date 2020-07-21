@@ -1,8 +1,8 @@
 ---
-  - name: load vars
-    include_vars: vars/win
+#  - name: load vars
+#    include_vars: vars/win
 
-  - name: Create the script Folder
+  - name: Create the script folder
     win_file: 
         path: C:\scripts\data
         state: directory
@@ -19,8 +19,8 @@
         src: files/win_alert_atstartup.ps1
         dest: C:\scripts\win_alert_atstartup.ps1
   - name: Deploy win_send_perf_alert.ps1 and set email address
-    win_copy:
-        src: files/win_send_perf_alert.ps1
+    win_template:
+        src:  win_send_perf_alert.ps1.j2
         dest: C:\scripts\win_send_perf_alert.ps1
 
   - name: Create counter definition
@@ -28,22 +28,21 @@
       src: templates/perf.xml.j2 
       dest: "c:\\scripts\\data\\{{item.value.name}}.xml"
       force: yes
-    loop: "{{ lookup('dict', counters) }}"
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
   - name: Stop Alerts before deploying them
-    win_shell: C:\scripts\win_cleanup_alert.ps1 -collector {{item.value.name}} >> c:\scripts\1.txt
-    loop: "{{ lookup('dict', counters) }}"
+    win_shell: C:\scripts\win_cleanup_alert.ps1 -collector "{{item.value.name}}" >> c:\scripts\win_cleanup_alert.txt
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
     register: result
 
   - name: Create Alerts and start
-    win_shell: C:\scripts\win_create_alert.ps1 -collector {{item.value.name}} >> c:\scripts\2.txt
-
-    loop: "{{ lookup('dict', counters) }}"
+    win_shell: C:\scripts\win_create_alert.ps1 -collector "{{item.value.name}}" >> c:\scripts\win_create_alert.txt
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
 
   - name: Start Alert at StartUp
-    win_shell: C:\scripts\win_alert_atstartup.ps1 -collector {{item.value.name}} 
-    loop: "{{ lookup('dict', counters) }}"
+    win_shell: C:\scripts\win_alert_atstartup.ps1 -collector "{{item.value.name}}" 
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
 
-  - name: Create a task generate emails alerts
+  - name: Create a task generate email alerts
     win_scheduled_task:
      name: Email-Perf-Alert
      description: Send email alerts for performance counters

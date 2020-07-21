@@ -48,9 +48,9 @@ If(!([string]::IsNullOrEmpty($name))) {
             "<br>Current Threshold: $ctr_value<br>"+
             "<br><b>Summary:</b><i> $usertext</i><br>"
 
-    $SMTPserver = "{{ perfmon_smtp_host  }}"
-    $MsgFrom = "{{ perfmon_email_from }}"
-    $MsgTo = "{{ perfmon_email_to }}"
+    $SMTPserver = "smtp.nist.gov"
+    $MsgFrom = "anil.das@nist.gov"
+    $MsgTo = "anil.das@nist.gov"
     $messageParameters = @{                         
                                 Subject = $msgSubject
                                 Body = $body 

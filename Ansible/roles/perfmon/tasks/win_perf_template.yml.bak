@@ -1,0 +1,44 @@
+---
+- hosts: win
+  tasks:
+  - name: Create the script Folder
+    win_file: 
+        path: C:\scripts\data
+        state: directory
+  - name: Deploy win_cleanup_alert
+      win_copy:
+        src: files/win_cleanup_alert.ps1
+        dest: C:\scripts
+  - name: Deploy win_create_alert
+      win_copy:
+        src: files/win_create_alert.ps1
+        dest: C:\scripts
+  - name: Deploy win_alert_atstartup.ps1
+      win_copy:
+        src: files/win_alert_atstartup.ps1
+        dest: C:\scripts
+  - name: Create alerts for each counter
+    template:
+      src: perf.xml.j2 
+      dest: "c:\\scripts\\{{item.value.name}}.xml"
+    loop: "{{ lookup('dict', counters) }}"
+
+  - name: Stop Alerts before deploying them
+    win_shell: C:\scripts\win_cleanup_alert.ps1 -collector {{item.value.name}} >> C:\scripts\.txt
+    args:
+      chdir: C:\scripts
+      creates: C:\scripts\win_cleanup_alert.txt
+    loop: "{{ lookup('dict', counters) }}"
+
+  - name: Create Alerts
+    win_shell: C:\scripts\win_cleanup_alert.ps1 >> C:\scripts\somelogn_cleanup_alert.txt
+    args:
+      chdir: C:\scripts
+      creates: C:\scripts\win_cleanup_alert.txt
+
+  - name: Stop Alerts before deploying them
+    win_shell: C:\scripts\win_cleanup_alert.ps1 >> C:\scripts\somelogn_cleanup_alert.txt
+    args:
+      chdir: C:\scripts
+      creates: C:\scripts\win_cleanup_alert.txt
+

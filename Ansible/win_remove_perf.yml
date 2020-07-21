@@ -1,5 +1,15 @@
 ---
 - hosts: win
+  vars:
+      perfmon_smtp_host: smtp.example.com
+      perfmon_email_from: from@sample.com
+      perfmon_email_to: to@sample.com
+      counters:
+         counter1:
+            name: 'Test Counter'
+            val: '\Memory\% Committed Bytes In Use&gt;80'
+            summary: 'Too many applications are running simultaneously on the virtual machine. An application may be leaking memory over time.'
+            sampleInterval: 120
   tasks:
   - name: Remove win_cleanup_alert
     win_file:
