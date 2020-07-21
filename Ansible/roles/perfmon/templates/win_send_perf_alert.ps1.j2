@@ -1,0 +1,64 @@
+﻿########################################################################
+# This script is triggered by the performance events to generate email
+# alerts to the support groups
+#
+# Command line Arguments: 
+#              1. Event Name
+#              2. Date/Time event was fired
+#              3. Event Counter value
+#              4. Threshold value
+#              5. Summary of the Event
+#              6. Counter Name
+# Name: win_send_perf_alert.ps1
+# Change History
+#   Name: Anil Das Date: 07/6/2020  Initial Creation
+########################################################################
+
+$name = $Args[0]
+$dateOccur = $Args[1]
+$threshold = $Args[2]
+$ctr_value = $Args[3]
+$usertext = $Args[4]
+$counter =  $Args[5]
+
+$LogFile="PerfLog.txt"
+$LogFolder="c:\Scripts\log"
+
+#Debug Report is created for every execution
+If(!(test-path $LogFolder))
+{
+        New-Item -ItemType Directory -Force -Path $LogFolder
+}
+$FileName=Join-Path -Path $LogFolder -ChildPath $LogFile
+if (!(Test-Path $FileName))
+{
+    New-Item -path $FileName -type "file"
+}
+
+#If File size is > 1kb
+if ((Get-Item $FileName).length -gt 1kb) {
+    echo $null > $FileName
+}
+
+If(!([string]::IsNullOrEmpty($name))) {
+    $msgSubject ="Alert From "+$env:COMPUTERNAME + "-"+$counter+ " "+$threshold
+    $Body = "<br><br>Source: $env:COMPUTERNAME" +
+            "<br>Data and Time of Alert: $dateOccur<br>"+
+            "<br><p><b>$counter is $threshold </b>"+
+            "<br>Current Threshold: $ctr_value<br>"+
+            "<br><b>Summary:</b><i> $usertext</i><br>"
+
+    $SMTPserver = "smtp.nist.gov"
+    $MsgFrom = "{{ alert_to_email }}"
+    $MsgTo = "{{ alert_from_email }}"
+    $messageParameters = @{                         
+                                Subject = $msgSubject
+                                Body = $body 
+                                From = $MsgFrom                         
+                                To = $MsgTo
+                                SmtpServer = $SMTPserver                        
+                          }    
+    Send-MailMessage @messageParameters -BodyAsHtml -ErrorAction Stop
+} else {
+    Add-Content -Path $FileName -Value "Nothing to Report"
+}

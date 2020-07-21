@@ -1,0 +1,25 @@
+---
+- hosts: win
+  tasks:
+  - name: Remove win_cleanup_alert
+    win_file:
+        path: "{{ item }}" 
+        state: absent
+    with_items:
+        - C:\scripts\win_create_alert.ps1
+        - C:\scripts\win_alert_atstartup.ps1
+        - C:\scripts\win_send_perf_alert.ps1
+  - name: Remove counter definition files
+    win_file:
+      path: "c:\\scripts\\data\\{{item.value.name}}.xml"
+      state: absent
+    loop: "{{ lookup('dict', counters) }}"
+  - name: Stop Alerts before deploying them
+    win_shell: C:\scripts\win_cleanup_alert.ps1 -collector {{item.value.name}} >> c:\scripts\1.txt
+    loop: "{{ lookup('dict', counters) }}"
+  - name: remove scheduled task
+    win_scheduled_task:
+     name: Email-Perf-Alert
+     state: absent
+     enabled: no
+

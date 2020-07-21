@@ -1,0 +1,3 @@
+---
+# tasks file for perfmon
+ - include: win_perf_template.yml
