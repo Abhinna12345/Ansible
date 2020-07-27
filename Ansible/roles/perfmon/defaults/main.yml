@@ -14,63 +14,63 @@
         sampleInterval: 60
      counter2:
         name: '2.PercentProcessorTime'
-        val: '\Processor(_Total)\% Processor Time'
+        counter: '\Processor(_Total)\% Processor Time'
         when: '>'
         limit: 80
         summary: 'If the value is constantly close to 100%, this is an indication of a processor bottleneck.'
         sampleInterval: 60
      counter3:
         name: '3.ProcessorPercentPrivilegedTime' 
-        val: '\Processor(_Total)\% Privileged Time' 
+        counter: '\Processor(_Total)\% Privileged Time' 
         when: '>'
         limit: 70
         summary: 'System is using too much CPU' 
         sampleInterval: 60
      counter4:
         name: '4.ProcessorPercentInterruptTime' 
-        val: '\Processor(_Total)\% Interrupt Time' 
+        counter: '\Processor(_Total)\% Interrupt Time' 
         when: '>'
         limit: 50
         summary: 'Hardware or driver problem' 
         sampleInterval: 60
      counter5:
         name: '5.ProcessorPercentDPCTime' 
-        val: '\Processor(_Total)\% DPC Time' 
+        counter: '\Processor(_Total)\% DPC Time' 
         when: '>'
         limit: 20
         summary: 'Hardware or driver problem' 
         sampleInterval: 60
      counter6:
         name: '6.PhysicalDiskAvgDiskSecRead' 
-        val: '\PhysicalDisk(_Total)\Avg. Disk sec/Read' 
+        counter: '\PhysicalDisk(_Total)\Avg. Disk sec/Read' 
         when: '>'
         limit: 0.025
         summary: 'A high Avg. Disk sec/Read performance counter value may occur due to a burst of disk read requests by either an operating system or application. ' 
         sampleInterval: 60
      counter7:
         name: '7.PhysicalDiskAvgDiskSecWrite'
-        val: '\PhysicalDisk(_Total)\Avg. Disk sec/Write' 
+        counter: '\PhysicalDisk(_Total)\Avg. Disk sec/Write' 
         when: '>'
         limit: 0.025
         summary: 'A high Avg. Disk sec/Write performance counter value may occur due to a burst of disk write requests by either an operating system or application.' 
         sampleInterval: 60
      counter8:
         name: '8.PhysicalDiskPercentDiskReadTime' 
-        val: '\PhysicalDisk(_Total)\% Disk Read Time' 
+        counter: '\PhysicalDisk(_Total)\% Disk Read Time' 
         when: '>'
         limit: 80
         summary: 'Avg. Disk sec/Read is the average time, in seconds, of a read of data to the disk. This analysis determines if any of the physical disks are responding slowly. This value can exceed 100%.' 
         sampleInterval: 60
      counter9:
         name: '9.PhysicalDiskPercentIdleTime' 
-        val: '\PhysicalDisk(_Total)\% Idle Time' 
+        counter: '\PhysicalDisk(_Total)\% Idle Time' 
         when: '<'
         limit: 10
         summary: 'This counter provides a very precise measurement of how much time the disk remained in idle state, meaning all the requests from the operating system to the disk have been completed and there is zero pending requests.' 
         sampleInterval: 60
      counter10:
         name: '10.PagingFileTotalPercent'
-        val: '\Paging File(_Total)\% Usage' 
+        counter: '\Paging File(_Total)\% Usage' 
         when: '>'
         limit: 50
         summary: 'This error indicates that there may be a performance problem with the disk hosting the page file. This problem may ultimately be related to a memory issue on the server.' 
@@ -84,21 +84,21 @@
         sampleInterval: 60
      counter12:
         name: '12.ProcessLsassPercent' 
-        val: '\Process(lsass)\% Processor Time' 
+        counter: '\Process(lsass)\% Processor Time' 
         when: '>'
         limit: 80
         summary: "High LSASS.exe CPU utilization can be caused by many different single or combined issues. Nearly each cause and resolution for these issues are unique. However, included in Windows Server 2008 and later is the tool which assists in determining what the problem cause is. That tool is the Performance Monitor's Active Directory Data Collector Set." 
         sampleInterval: 60
      counter14:
         name: '14.MemoryPagesSec' 
-        val: '\Memory\Pages/sec' 
+        counter: '\Memory\Pages/sec' 
         when: '>'
         limit: 1000
         summary: 'If it is high, then the system is likely running out of memory by trying to page the memory to the disk. Pages/sec is the rate at which pages are read from or written to disk to resolve hard page faults' 
         sampleInterval: 60
      counter15:
         name: '15.MemoryFreeSystemPageTableEntries' 
-        val: '\Memory\Free System Page Table Entries' 
+        counter: '\Memory\Free System Page Table Entries' 
         when: '>'
         limit: 5000
         summary: 'Free System Page Table Entries is the number of page table entries not currently in used by the system. This analysis determines if the system is running out of free system page table entries (PTEs) by checking if there is less than 5,000 free PTE’s with a Warning if there is less than 10,000 free PTE’s. Lack of enough PTEs can result in system wide hangs' 
