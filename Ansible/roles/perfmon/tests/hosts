@@ -1,0 +1,8 @@
+[win]
+win2012srv
+
+[win:vars]
+ansible_user=administrator
+ansible_password=Orissa11!
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore

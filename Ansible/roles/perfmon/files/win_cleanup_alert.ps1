@@ -20,20 +20,20 @@
         #Stop existing collectors
         if (($logmanQuery -Match "Running")) {
             $query = "logman stop -n `""+$collector + "`""
-            $logmanQuery = Invoke-Expression $query -ErrorAction Stop
+            $out = Invoke-Expression $query -ErrorAction Stop
         }
         #Delete the existing collector
         if (($logmanQuery -Match $collector)) {
             #logman stop -n $file.BaseName
             $query = "logman delete -n `""+$collector + "`""
-            $logmanQuery = Invoke-Expression $query -ErrorAction Stop
-            if ($lastexitcode) {throw $logmanQuery}
+            $out = Invoke-Expression $query -ErrorAction Stop
+            if ($lastexitcode) {throw $out}
         }
         Write-Output "    [OK]"
       } 
       catch 
       {
-        Write-Output "[$query][$logmanQuery]"
+        Write-Output "[$query][$out]"
       }
    }
 

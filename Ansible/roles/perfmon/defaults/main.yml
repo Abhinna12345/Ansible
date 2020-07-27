@@ -3,7 +3,6 @@
   perfmon_smtp_host: smtp.example.com
   perfmon_email_from: from@example.com
   perfmon_email_to: to@example.com
-
   counters:
      counter1:
         name: '1.MemoryPercentCommittedBytes'
@@ -77,7 +76,7 @@
         sampleInterval: 60
      counter11:
         name: '11.LogicalDiskAvgDiskSecRead' 
-        val: '\LogicalDisk(_Total)\Avg. Disk sec/Read' 
+        counter: '\LogicalDisk(_Total)\Avg. Disk sec/Read' 
         when: '>'
         limit: 0.015
         summary: 'A high Avg. Disk sec/Transfer performance counter value may occur due to a burst of disk transfer requests by either an operating system or application.' 
@@ -101,6 +100,6 @@
         counter: '\Memory\Free System Page Table Entries' 
         when: '>'
         limit: 5000
-        summary: 'Free System Page Table Entries is the number of page table entries not currently in used by the system. This analysis determines if the system is running out of free system page table entries (PTEs) by checking if there is less than 5,000 free PTE’s with a Warning if there is less than 10,000 free PTE’s. Lack of enough PTEs can result in system wide hangs' 
+        summary: 'Free System Page Table Entries is the number of page table entries not currently in used by the system. This analysis determines if the system is running out of free system page table entries (PTEs) by checking if there is less than 5,000 free PTEs with a Warning if there is less than 10,000 free PTEs. Lack of enough PTEs can result in system wide hangs' 
         sampleInterval: 60
 #

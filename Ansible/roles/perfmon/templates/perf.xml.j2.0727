@@ -38,11 +38,11 @@
 	<AlertDataCollector>
 		<DataCollectorType>3</DataCollectorType>
 		<Name>DataCollector01</Name>
-		<Alert>{{ item.value.counter }}{% if '>' == item.value.when %}&gt;{% else %}&lt;{% endif %}{{ item.value.limit }}</Alert>
-		<AlertDisplayName>{{ item.value.counter }}{% if '>' == item.value.when %}&gt;{% else %}&lt; {% endif %}{{ item.value.limit }}</AlertDisplayName>
+		<Alert>{{ item.value.val }}</Alert>
+		<AlertDisplayName>{{ item.value.val }}</AlertDisplayName>
 		<EventLog>-1</EventLog>
 		<SampleInterval>{{ item.value.sampleInterval }}</SampleInterval>
-		<Task>Email-Perf-Alert</Task>
+		<Task>EmailAlert-Argument</Task>
 		<TaskRunAsSelf>0</TaskRunAsSelf>
 		<TaskArguments>"{name}"  "{date}" "{threshold}%" "{value}" "{usertext}" "{counter}"</TaskArguments>
 		<TaskUserTextArguments>{{ item.value.summary }}</TaskUserTextArguments>
