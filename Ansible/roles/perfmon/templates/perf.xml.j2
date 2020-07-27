@@ -38,8 +38,8 @@
 	<AlertDataCollector>
 		<DataCollectorType>3</DataCollectorType>
 		<Name>DataCollector01</Name>
-		<Alert>{{ item.value.val }}</Alert>
-		<AlertDisplayName>{{ item.value.val }}</AlertDisplayName>
+                <Alert>{{ item.value.counter }}{% if '>' == item.value.when %}&gt;{% else %}&lt;{% endif %}{{ item.value.limit }}</Alert>
+                <AlertDisplayName>{{ item.value.counter }}{% if '>' == item.value.when %}&gt;{% else %}&lt;{% endif %}{{ item.value.limit }}</AlertDisplayName>
 		<EventLog>-1</EventLog>
 		<SampleInterval>{{ item.value.sampleInterval }}</SampleInterval>
 		<Task>EmailAlert-Argument</Task>
