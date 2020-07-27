@@ -1,4 +1,0 @@
-- hosts: win
-  become: yes
-  roles:
-    - perfmon
