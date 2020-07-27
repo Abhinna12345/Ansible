@@ -8,7 +8,9 @@
           counters:
              counter1:
                 name: 'Test Counter'
-                val: '\Memory\% Committed Bytes In Use&gt;80'
+                counter: '\Memory\% Committed Bytes In Use'
+                when: '>'
+                limit: 80
                 summary: 'Too many applications are running simultaneously on the virtual machine. An application may be leaking memory over time.'
                 sampleInterval: 120
 
