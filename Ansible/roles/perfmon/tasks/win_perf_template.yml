@@ -25,20 +25,20 @@
       src: templates/perf.xml.j2 
       dest: "c:\\scripts\\data\\{{item.value.name}}.xml"
       force: yes
-    loop: "{{ lookup('dict', counters) }}"
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
   - name: Stop Alerts before deploying them
     win_shell: C:\scripts\win_cleanup_alert.ps1 -collector {{item.value.name}} >> c:\scripts\win_cleanup_alert.txt
-    loop: "{{ lookup('dict', counters) }}"
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
     register: result
 
   - name: Create Alerts and start
     win_shell: C:\scripts\win_create_alert.ps1 -collector {{item.value.name}} >> c:\scripts\win_create_alert.txt
 
-    loop: "{{ lookup('dict', counters) }}"
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
 
   - name: Start Alert at StartUp
     win_shell: C:\scripts\win_alert_atstartup.ps1 -collector {{item.value.name}} 
-    loop: "{{ lookup('dict', counters) }}"
+    loop: "{{ lookup('dict', counters, wantlist=True) }}"
 
   - name: Create a task generate emails alerts
     win_scheduled_task:
