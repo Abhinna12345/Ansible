@@ -44,7 +44,7 @@
 		<SampleInterval>{{ item.value.sampleInterval }}</SampleInterval>
 		<Task>Email-Perf-Alert</Task>
 		<TaskRunAsSelf>0</TaskRunAsSelf>
-		<TaskArguments>"{name}"  "{date}" "{threshold}%" "{value}" "{usertext}" "{counter}"</TaskArguments>
+		<TaskArguments>"{name}"  "{date}" "{threshold}{% if '%' in item.value.counter %}%{% endif %}" "{value}" "{usertext}" "{counter}"</TaskArguments>
 		<TaskUserTextArguments>{{ item.value.summary }}</TaskUserTextArguments>
 		<TriggerDataCollectorSet>
 		</TriggerDataCollectorSet>
@@ -62,5 +62,3 @@
 		</EventsFileName>
 	</DataManager>
 </DataCollectorSet>
-
-
