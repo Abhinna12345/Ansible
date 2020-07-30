@@ -45,28 +45,28 @@
         when: '>'
         limit: 0.025
         summary: 'A high Avg. Disk sec/Read performance counter value may occur due to a burst of disk read requests by either an operating system or application. ' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter7:
         name: '7.PhysicalDiskAvgDiskSecWrite'
         counter: '\PhysicalDisk(_Total)\Avg. Disk sec/Write' 
         when: '>'
         limit: 0.025
         summary: 'A high Avg. Disk sec/Write performance counter value may occur due to a burst of disk write requests by either an operating system or application.' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter8:
         name: '8.PhysicalDiskPercentDiskReadTime' 
         counter: '\PhysicalDisk(_Total)\% Disk Read Time' 
         when: '>'
         limit: 80
         summary: 'Avg. Disk sec/Read is the average time, in seconds, of a read of data to the disk. This analysis determines if any of the physical disks are responding slowly. This value can exceed 100%.' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter9:
         name: '9.PhysicalDiskPercentIdleTime' 
         counter: '\PhysicalDisk(_Total)\% Idle Time' 
         when: '<'
         limit: 10
         summary: 'This counter provides a very precise measurement of how much time the disk remained in idle state, meaning all the requests from the operating system to the disk have been completed and there is zero pending requests.' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter10:
         name: '10.PagingFileTotalPercent'
         counter: '\Paging File(_Total)\% Usage' 
@@ -80,7 +80,7 @@
         when: '>'
         limit: 0.015
         summary: 'A high Avg. Disk sec/Transfer performance counter value may occur due to a burst of disk transfer requests by either an operating system or application.' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter12:
         name: '12.ProcessLsassPercent' 
         counter: '\Process(lsass)\% Processor Time' 
@@ -94,12 +94,12 @@
         when: '>'
         limit: 1000
         summary: 'If it is high, then the system is likely running out of memory by trying to page the memory to the disk. Pages/sec is the rate at which pages are read from or written to disk to resolve hard page faults' 
-        sampleInterval: 60
+        sampleInterval: 300
      counter15:
         name: '15.MemoryFreeSystemPageTableEntries' 
         counter: '\Memory\Free System Page Table Entries' 
         when: '>'
         limit: 5000
         summary: 'Free System Page Table Entries is the number of page table entries not currently in used by the system. This analysis determines if the system is running out of free system page table entries (PTEs) by checking if there is less than 5,000 free PTEs with a Warning if there is less than 10,000 free PTEs. Lack of enough PTEs can result in system wide hangs' 
-        sampleInterval: 60
+        sampleInterval: 300
 #
