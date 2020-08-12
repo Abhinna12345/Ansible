@@ -1,0 +1,61 @@
+---
+- hosts: localhost
+  connection: winrm
+  vars:
+    master:
+      - win2012srv
+    slaves:
+      - win2012srv1
+      - win2012srv2
+  tasks:
+    - add_host:
+        name: "{{ item }}"
+        group: primary
+      with_items: "{{ master }}"
+    - add_host:
+        name: "{{ item }}"
+        group: secondary
+      with_items: "{{ slaves }}"
+
+- hosts: secondary
+  gather_facts: no
+  serial: 1
+  tasks:
+    - name: Check IIS
+      win_service:
+        name: W3SVC
+        state: stopped
+      ignore_errors: yes
+      register: result
+    - debug:
+        msg: "{{ result }}"
+#After IIS is stopped on dependent servers, patch the primary
+- hosts: primary
+  gather_facts: no
+  serial: 1
+  tasks:
+    - name: Security updates applied on win2
+      win_updates:
+         category_names:
+           - SecurityUpdates
+           - CriticalUpdates
+           - UpdateRollups
+      register: result
+    - win_reboot:
+        reboot_timeout: 1800
+      when: result.reboot_required
+#Now we are ready to patch secondary servers
+- hosts: secondary
+  gather_facts: no
+  serial: 1
+  tasks:
+    - name: Security updates applied on win2
+      win_updates:
+         category_names:
+           - SecurityUpdates
+           - CriticalUpdates
+           - UpdateRollups
+      register: result
+    - win_reboot:
+        reboot_timeout: 1800
+      when: result.reboot_required	  
