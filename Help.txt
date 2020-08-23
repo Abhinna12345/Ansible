@@ -1,0 +1,14 @@
+Get-Content file.txt | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
+
+    $var = $_.Split('=',2).Trim()
+    New-Variable -Scope Script -Name $var[0] -Value $var[1]
+
+}
+
+
+Use New-TimeSpan and supply the information!
+          For example, to show the difference between today and the upcoming New Year:
+$StartDate=(GET-DATE)
+$EndDate=[datetime]”01/01/2014 00:00”
+NEW-TIMESPAN –Start $StartDate –End $EndDate
+
