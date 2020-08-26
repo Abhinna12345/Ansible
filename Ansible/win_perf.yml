@@ -1,16 +1,12 @@
-- hosts: win
-  roles:
-      - role: perfmon
-        vars:
-          perfmon_smtp_host: smtp.sample.com
-          perfmon_email_from: from@sample.com
-          perfmon_email_to: to@sample.com 
-          counters:
-             counter1:
-                name: 'Test Counter'
-                counter: '\Memory\% Committed Bytes In Use'
-                when: '>'
-                limit: 80
-                summary: 'Too many applications are running simultaneously on the virtual machine. An application may be leaking memory over time.'
-                sampleInterval: 120
-
+- hosts: all
+  tasks:
+    - name: Include vars
+      include_vars: vars/perfmon_devtest.yml
+      when: (env is defined) and (env|length > 0)
+    - name: Include vars
+      include_role:
+         name: perfmon
+      vars:
+          perfmon_smtp_host: smtp.sample.gov
+          perfmon_email_from: from@sample.gov
+          perfmon_email_to: to@sample.gov
