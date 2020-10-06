@@ -15,9 +15,10 @@
       "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_url": "{{user `iso_url`}}",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
-      "ssh_password": "{{user `my_secret` }}",
-      "ssh_timeout": "6h",
-      "ssh_username": "vagrant",
+	  "communicator": "winrm",
+	  "winrm_username": "vagrant",
+	  "winrm_password": "{{user `my_secret` }}",
+	  "winrm_timeout": "{{user `winrm_timeout`}}",
       "type": "virtualbox-iso",
       "vboxmanage": [
         [
@@ -49,9 +50,8 @@
       "remote_path": "/tmp/script.bat",
       "scripts": [
         "./scripts/vm-guest-tools.bat",
-        "./scripts/vagrant-ssh.bat",
-        "./scripts/enable-rdp.bat",
 		"./scripts/enable-winrm.ps1",
+        "./scripts/enable-rdp.bat",
         "./scripts/compile-dotnet-assemblies.bat",
         "./scripts/disable-auto-logon.bat",
         "./scripts/compact.bat"
@@ -62,6 +62,7 @@
   "variables": {
     "autounattend": "./answer_files/2012_r2/Autounattend.xml",
     "cpus": "2",
+	"winrm_timeout": "6h",
     "disk_size": "61440",
     "headless": "true",
 	   "iso_checksum": "458ff91f8abc21b75cb544744bf92e6a",
