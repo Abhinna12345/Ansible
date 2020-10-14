@@ -1,14 +1,40 @@
-Get-Content file.txt | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
+---
+---
+splunk_source: /Source
+splunk_release: "8.0.2.1"
+dest_install_file_folder: "C:\\Source\\splunk"
+# These may be removed at some point, but they are placeholders so I don't forget to set them
+splunk_forwarder_indexer: "monitor.sample.com:9997"
+splunk_forwarder_index: "default"
+splunk_forwarder_sourcetype: "nginx"
+splunk_enable_app_event: "WINEVENTLOG_APP_ENABLE=1"
+splunk_enable_sec_event: "WINEVENTLOG_SEC_ENABLE=1"
+splunk_enable_sys_event: "WINEVENTLOG_SYS_ENABLE=1"
+splunk_start_splunk_after_install: "1"
+splunk_monitor_paths: ["c:\\path1\\sub1", "c:\\path2\\sub2"]
+splunk_forwarder_logs: >
+  MONITOR_PATH="c:\\path1\\sub1"
+  MONITOR_PATH="c:\\path2\\sub2"
 
-    $var = $_.Split('=',2).Trim()
-    New-Variable -Scope Script -Name $var[0] -Value $var[1]
-
-}
+- set_fact:
+    monitor_folders: "{{ join('MONITOR_PATH=') splunk_monitor_paths | join(' ') }} if splunk_monitor_paths|length > 0 else 'wheel'"
 
 
-Use New-TimeSpan and supply the information!
-          For example, to show the difference between today and the upcoming New Year:
-$StartDate=(GET-DATE)
-$EndDate=[datetime]”01/01/2014 00:00”
-NEW-TIMESPAN –Start $StartDate –End $EndDate
+- name: Download the Splunk Installers (Git)
+  win_copy:
+    src: "{{ splunk_source }}/{{ splunk_release }}"
+    dest: "{{ dest_folder }}"
+  when: ansible_os_family == "Windows"
 
+- name: Install and Configure Forwarder
+  win_shell msiexec.exe /i {{ dest_folder }}/splunkuniversalforwarder_x86.msi RECEIVING_INDEXER="{{ splunk_forwarder_indexer }}" WINEVENTLOG_APP_ENABLE={{ splunk_enable_app_event | default(0) }} WINEVENTLOG_SEC_ENABLE={{ splunk_enable_sec_event | default(0) }} WINEVENTLOG_SYS_ENABLE={{ splunk_enable_sec_event | default(0) }} AGREETOLICENSE=Yes GENRANDOMPASSWORD=1 LAUNCHSPLUNK={{ splunk_start_splunk_after_install | default(0) }} MONITOR_PATH="c:\temp"  /quiet
+
+- name: Upload Splunk Systemd Script
+  copy:
+    src: splunk.service
+    dest: /etc/systemd/system/splunkd.service
+    owner: 0
+    group: 0
+    mode: 0755
+  notify: Start Splunk Forwarder Service
+  when: ansible_service_mgr == 'systemd'
