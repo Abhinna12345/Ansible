@@ -1,0 +1,107 @@
+S3
+-	Data is stored as objects within resources called “buckets”
+-	Single object can be up to 5 terabytes in size. 
+-	S3 features include capabilities to append metadata tags to objects, move and store data across the S3 Storage Classes, 
+-	You can configure and enforce data access controls, secure data against unauthorized users, run big data analytics
+-	Monitor data at the object and bucket levels. Objects can be accessed through S3 Access Points or directly through the bucket hostname.
+-	Buckets are organized with shared names called prefixes
+-	You can also append up to 10 key-value pairs called S3 object tags to each object
+-	To keep track of objects and their respective tags, buckets, and prefixes, you can use an S3 Inventory report that lists your stored objects within an S3 bucket or with a specific prefix, and their respective metadata and encryption status. S3 Inventory can be configured to generate reports on a daily or a weekly basis.
+-	Versioning
+-	To prevent accidental deletions, enable Multi-Factor Authentication (MFA) Delete on an S3 bucket
+-	With S3 Replication, you can replicate objects (and their respective metadata and object tags) into the same or different AWS Regions for reduced latency, compliance, security, disaster recovery, and other use cases.
+-	You can use S3 Replication (CRR and SRR) with S3 Lifecycle rules.
+-	For example, you can configure a lifecycle rule to migrate data from the S3 Standard storage class to the S3 Standard-IA or S3 One Zone-IA storage class or archive data to S3 Glacier on the destination bucket.
+-	You can replicate KMS-encrypted objects by providing a destination KMS key in your replication configuration.
+-	You can set up replication across AWS accounts to store your replicated data in a different account in the target region.
+-	Amazon S3 Replication (CRR and SRR) is configured at the S3 bucket level, a shared prefix level, or an object level using S3 object tags.
+-	S3 Cross-Region Replication (CRR) is configured to a source S3 bucket and replicates objects into a destination bucket in another AWS Region.
+-	Amazon S3 Same-Region Replication (SRR), replicates objects between buckets in the same region. 
+-	Amazon S3 Replication Time Control is a feature of S3 Replication that helps you meet compliance or business requirements for predictable replication times. 
+-	Amazon S3 Replication metrics and events are enabled automatically for each S3 Replication rule configured with S3 Replication Time Control. 
+-	S3 Replication Time Control provides S3 Replication metrics that monitor the total number of S3 API operations that are pending replication, the total size of objects pending replication, and the maximum replication time to the destination Region.
+-	Amazon S3 Replication Time Control is designed to replicate 99.99% of your objects within 15 minutes, and is backed by a service level agreement.
+-	For CRR and SRR, you pay the Amazon S3 charges for storage in the destination S3 storage class you select, in addition to the storage charges for the primary copy, replication PUT requests, and applicable infrequent access storage retrieval fees. 
+-	For CRR, you also pay for inter-region Data Transfer OUT From Amazon S3 to your destination region.
+-	For S3 Replication Time Control, you pay an additional Data Transfer fee and S3 Replication Metrics charges that are billed at the same rate as Amazon CloudWatch custom metrics. 
+-	IPv6 support is not currently available when using Website Hosting and access via BitTorrent. All other features should work as expected when accessing Amazon S3 using IPv6.
+-	Amazon CloudWatch to track the operational health of your AWS resources and configure billing alerts that are sent to you when estimated charges reach a user-defined threshold
+-	AWS CloudTrail tracks and reports on bucket-level and object-level activities.
+-	You can configure S3 Event Notifications to trigger workflows, alerts, and invoke AWS Lambda when a specific change is made to your S3 resources.
+Amazon S3 Storage Classes
+S3 Storage Classes can be configured at the object level and a single bucket can contain objects stored in S3 Standard, S3 Intelligent-Tiering, S3 Standard-IA, and S3 One Zone-IA. 
+You can also use S3 Lifecycle policies to automatically transition objects between storage classes without any application changes.
+S3 Standard
+S3 Intelligent-Tiering storage class is designed to optimize costs by automatically moving data to the most cost-effective access tier, without performance impact or operational overhead. It works by storing objects in two access tiers: one tier that is optimized for frequent access and another lower-cost tier that is optimized for infrequent access. 
+Infrequent access
+S3 Standard-IA
+S3 Standard-IA is for data that is accessed less frequently, but requires rapid access when needed. S3 Standard-IA offers the high durability, high throughput, and low latency of S3 Standard, with a low per GB storage price and per GB retrieval fee. Storage classes store data in a minimum of three Availability Zones (AZs).
+S3 One Zone-IA is for data that is accessed less frequently, but requires rapid access when needed. S3 One Zone-IA stores data in a single AZ and costs 20% less than S3 Standard-IA.
+Amazon S3 Glacier (S3 Glacier) 
+To keep costs low yet suitable for varying needs, S3 Glacier provides three retrieval options that range from a few minutes to hours. 
+You can upload objects directly to S3 Glacier, or use S3 Lifecycle policies to transfer data between any of the S3 Storage Classes for active data (S3 Standard, S3 Intelligent-Tiering, S3 Standard-IA, and S3 One Zone-IA) and S3 Glacier.
+S3 Glacier Deep Archive
+S3 Glacier Deep Archive is Amazon S3’s lowest-cost storage class and supports long-term retention and digital preservation for data that may be accessed once or twice in a year. 
+S3 Outposts
+S3 on Outposts delivers object storage to your on-premises AWS Outposts environment.
+Amazon CloudFront 
+Web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users. 
+If the content is already in the edge location with the lowest latency, CloudFront delivers it immediately.
+If the content is not in that edge location, CloudFront retrieves it from an origin that you've defined—such as an Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a web server) that you have identified as the source for the definitive version of your content.
+CloudFront speeds up the distribution of your content by routing each user request through the AWS backbone network to the edge location that can best serve your content.
+
+
+
+EBS
+-	Amazon Elastic Block Store (EBS) is an easy to use, high performance block storage service for EC2
+-	You can choose from five different volume types. Options range from highly cost-effective dollar per gigabyte volumes to high performance volumes with high IOPS and high throughput
+-	The most recent EBS volume, io2, delivers a 10X higher IOPS to storage ratio of 500 IOPS for every provisioned GB at the same price as io1
+-	io2 is ideal for performance intensive, business critical applications such as SAP HANA, Oracle, Microsoft SQL Server and IBM DB2 that will benefit from higher uptime.
+-	EBS offers backups using EBS Snapshots that are incremental and save on storage costs by not duplicating data.
+-	You can change volume types, tune performance, or increase volume size without disrupting your critical applications
+-	EBS volumes are replicated within an Availability Zone (AZ) and can easily scale to petabytes of data. 
+-	You can use EBS Snapshots with automated lifecycle policies to back up your volumes in Amazon S3
+-	EBS volumes support encryption of data at-rest, data in-transit, and all volume backups. EBS encryption is supported by all volume types, includes built-in key management infrastructure, and has zero impact on performance.
+-	Databases such as SAP HANA, Oracle, Microsoft SQL Server, MySQL and PostgreSQL are widely deployed on Amazon EBS.
+-	Amazon EBS volumes provide consistent and low-latency performance for running NoSQL databases such as Cassandra, MongoDB, and CouchDB.
+-	Amazon EBS allows you to minimize data loss and recovery time with the ability to regularly back up your data and log files across different geographic regions.
+-	Amazon EBS offers data persistence, dynamic performance adjustments, and the ability to detach and reattach volumes, allowing you to resize clusters for big data analytics engines such as Hadoop and Spark.
+-	AWS Compute Optimizer enhances EC2 instance type recommendations with Amazon EBS metrics
+-	AWS Outposts is a fully managed service that offers the same AWS infrastructure, AWS services, APIs, and tools to virtually any datacenter, co-location space, or on-premises facility for a truly consistent hybrid experience
+-	The Amazon Elastic Block Store Container Storage Interface (CSI) Driver provides a CSI interface used by Container Orchestrators to manage the lifecycle of Amazon EBS volumes.
+-	The EBS CSI driver makes it easy to provision, attach, and mount EBS volumes into Kubernetes pods.
+-	You can now provide multiple creation and retention schedules for your EBS Snapshots within a single Data Lifecycle Manager (DLM) policy. Multiple schedule support enables you to create Daily, Weekly and Monthly snapshots for your target volumes from the same DLM policy, reducing the setup time and making it easier to manage DLM policies.
+-	Each schedule supports tagging, Fast Snapshot Restore (FSR) and cross region copy individually, providing the flexibility to enable these actions for each schedule independently.  
+-	FSR eliminates the need for pre-warming data into volumes, and ensures that EBS volumes restored from FSR-enabled snapshots instantly receive full provisioned performance. 
+-	EC2 Image Builder is now integrated with AWS Key Management Service (KMS) and enables customers to build and distribute Amazon Machine Images (AMIs) that are encrypted with Amazon Elastic Block Store (EBS) encryption.
+-	Amazon EBS increases concurrent snapshot copy limits to 20 snapshots per destination Region, an increase from the previous limit of 5 concurrent copies per destination region per account. The new limit applies to all commercial AWS regions (except GovCloud(US) and China).
+-	You can now enable Multi-Attach on Amazon EBS Provisioned IOPS io1 volumes to allow a single volume to be concurrently attached to up to sixteen AWS Nitro System-based Amazon Elastic Compute Cloud (Amazon EC2) instances within the same Availability Zone.
+
+Storage
+Instance storage – Ephemeral
+	Store page files, temp files
+EBS – 
+	GP-SSD – for system boot volumes, virtual desktops, small to medium DBs, Dev/Test
+	PIOPS – for Relational databases and I/O intensive tasks
+	Throughput optimized HDD – lower-tier
+	Cold HHD – For big data
+	Magnetic – phased out
+-	Does not need to be attached to an instance – helps to take snapshot, move to another instance
+-	Can not be attached to more than one instance at the same time
+-	Can be transferred between availability zones
+-	EBS volume data is replicated across multiple servers in an availability zone
+-	You can encrypt EBS volume, boot volumes and snapshots
+-	Designed for an annual failure rate (AFR) of between 0.1% - 0.2% and an SLA 99.95%
+1.	How would you respond to your boss if he asked you the difference between Amazon Simple Storage Service (Amazon S3) storage and Elastic Block Storage (EBS)?
+-	Amazon S3 uses buckets to store objects
+-	The objects that are stored within a bucket hold both metadata and data
+-	You can store individual objects up to 5 TB in size, but have unlimited amounts of objects within an individual and unique bucket.
+
+2.	How do you move an EBS volume that is already allocated to an active EC2 production instance to another availability zone. 
+Using the volume create a snapshot and then create a volume from that snapshot in the different Availability Zone(AZ).
+3.	You are concerned with the overall recoverability of your data. Amazon S3 infrastructure is considered eventually consistent. This means data is dynamically copied through an automated process to several locations and server within the same region. 
+
+
+
+
+
