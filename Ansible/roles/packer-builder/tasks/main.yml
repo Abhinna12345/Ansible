@@ -1,0 +1,31 @@
+---
+# tasks file for packer-builder
+     #Verify that datacenter_tag is either "all" or one of the valid datacenters
+     - name: Validate input
+       assert :
+         that: datacenter_tag != ""
+     - name: Get datacenter names
+       set_fact:
+        datacenterList: "{{ datacenters.keys()|list }}"
+     # Include validation task to validate user input
+     - include_tasks: validate_datacenter.yml
+       when: datacenter_tag in datacenterList
+     - name: Packer Execute Builder
+       win_shell: c:\scripts\test1.ps1
+       async: 45
+       poll: 0
+       with_items:
+           - 1
+           - 2
+       #loop: "{{ lookup('dict', datacenters, wantlist=True) }}"
+       register: async_results
+
+     - name: Check sync status
+       async_status:
+         jid: "{{ async_result_item.ansible_job_id }}"
+       loop: "{{ async_results.results }}"
+       register: async_poll_results
+       delay: 2
+       until: async_poll_results.finished
+       retries: 30
+

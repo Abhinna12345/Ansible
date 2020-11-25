@@ -1,0 +1,5 @@
+---
+     - fail:
+         msg: "Upsupported datacenter: {{ datacenter_tag }}"
+       when: 'datacenter_tag not in datacenterList'
+

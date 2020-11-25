@@ -1,0 +1,21 @@
+---
+# defaults file for packer-builder
+supported_os:
+        - windows2019
+        - windows2016
+datacenter_tag: east
+acceptable_datacenters: ['east', 'west', 'vcloud']
+datacenters:
+        east:
+          vsphere_cluster: "cluster-A"
+          vsphere_datacenter: "East"
+          vsphere_server: "east.sample.com"
+        west:
+          vsphere_cluster: "cluster-B"
+          vsphere_datacenter: "East"
+          vsphere_server: "west.sample.com"
+        vCloud:
+          vsphere_cluster: "cluster-V"
+          vsphere_datacenter: "Cloud-East"
+          vsphere_server: "vcloud.sample.com"
+
