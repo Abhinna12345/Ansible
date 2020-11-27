@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+   templates:
+     - name: repo1
+       os_list:
+           - win2019
+           - win2016
+       datacenters:
+                - east
+                - west
+                - vcenter
+  tasks:
+  - include_tasks: initiate-builder.yml
+    loop: "{{ templates }}"
+    loop_control:
+        loop_var: repo
+

@@ -1,0 +1,27 @@
+
+---
+  - name: Validate input
+    assert :
+      that: datacenter_tag != ""
+
+  - name: Get datacenter names
+    set_fact:
+        datacenterList: "{{ datacenters.keys()|list }}"
+  - debug:
+       var: item
+    loop: "{{ datacenterList }}"
+# Include validation task to validate user input
+# If datacenter_tag is "all" or "", user datacenterList
+  - include_tasks: initiate-builder.yml
+    when: 
+        - datacenter_tag|lower == 'all' or
+          datacenter_tag is undefined or
+          datacenter_tag == ''
+
+#if datacenter_tag is in datacenterList, just use the single datacenter
+# Exceute builds
+  - include_tasks: validate_datacenter.yml
+    when: 
+          - datacenter_tag != 'all'
+          - datacenter_tag in datacenterList
+
