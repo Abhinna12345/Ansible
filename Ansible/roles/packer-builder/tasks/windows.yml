@@ -1,27 +1,29 @@
 
 ---
+  - name: User input
+    debug: 
+      msg: datacenter tag {{ datacenter_tag }}
   - name: Validate input
     assert :
       that: datacenter_tag != ""
-
-  - name: Get datacenter names
+  - name: Create datacenter name(s)
     set_fact:
-        datacenterList: "{{ datacenters.keys()|list }}"
+        datacenterList: "{{ datacenters.keys()|list if datacenter_tag == 'all' else [datacenter_tag] }}"
+  - name: List of datacenters
+    debug: 
+      msg: datacenterList {{ datacenterList }}
   - debug:
        var: item
     loop: "{{ datacenterList }}"
-# Include validation task to validate user input
+# Copy Files to remove Windows Server
+  - name: Copy all contents to remove server
+    win_copy:
+       src: "{{ role_path }}/files/"
+       dest: /tmp
 # If datacenter_tag is "all" or "", user datacenterList
-  - include_tasks: initiate-builder.yml
+  - name: Initiate task builders
+    include_tasks: initiate-builder.yml
     when: 
-        - datacenter_tag|lower == 'all' or
-          datacenter_tag is undefined or
-          datacenter_tag == ''
-
-#if datacenter_tag is in datacenterList, just use the single datacenter
-# Exceute builds
-  - include_tasks: validate_datacenter.yml
-    when: 
-          - datacenter_tag != 'all'
-          - datacenter_tag in datacenterList
+        - datacenterList is defined
+        - datacenterList|length > 0
 

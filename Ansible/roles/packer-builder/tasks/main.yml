@@ -4,9 +4,10 @@
 - name: Check OS Version 
   assert:
     that:
-      - ansible_facts['os_family']|lower == 'Windows'
-    fail_msg: "You cannot run this playbook on {{ ansible_facts['os_family'] }}"
-    success_msg: "Start Packer builder"
+      - ansible_facts['os_family'] == 'Windows'
+    fail_msg: "This playbook is for Windows platforms only. You are running this playbook on {{ ansible_facts['os_family'] }}."
+    success_msg: "Start Packer builder on {{ inventory_hostname }}"
 - import_tasks: windows.yml
+  when: ansible_facts['os_family'] == 'Windows'
 
 

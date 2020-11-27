@@ -1,0 +1,13 @@
+- name: Initiate Datacenter List
+  set_fact:
+      all_datacenters: []
+
+- name: Add new JSON Objects to List
+  set_fact:
+        all_datacenters: "{{ all_datacenters +  [[item, datacenters[item].vsphere_cluster, datacenters[item].vsphere_datacenter,  datacenters[item].vsphere_server ]] }}"
+  loop: "{{ datacenterList }}"
+- debug: msg="{{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}}"
+  with_nested:
+         - "{{ os_list }}"
+         - "{{ all_datacenters }}"
+

@@ -3,7 +3,7 @@
         os_list:
            - win2019
            - win2016
-        datacenter_tag: all
+        datacenter_tag: east
         datacenters:
           east:
             vsphere_cluster: "cluster-e"

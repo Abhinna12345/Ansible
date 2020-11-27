@@ -2,22 +2,37 @@
   set_fact:
       all_datacenters: []
 
-- name: Add new JSON Objects to List
+- name: Create a List from the Default Object
   set_fact:
         all_datacenters: "{{ all_datacenters +  [[item, datacenters[item].vsphere_cluster, datacenters[item].vsphere_datacenter,  datacenters[item].vsphere_server ]] }}"
   loop: "{{ datacenterList }}"
-- debug: msg="{{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}}"
+
+- name: Print the list of all jobs to be initiated
+  debug: 
+    msg="PackerBuilder Inputs - {{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}}"
   with_nested:
          - "{{ os_list }}"
          - "{{ all_datacenters }}"
-- name: Initiate the builders
-  command: "echo {{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}}"
+
+- name: Run job sync
+  win_shell: c:\scripts\test1.ps1 {{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}} >> c:\scripts\test1.log
+  with_nested:
+    - "{{ os_list }}"
+    - "{{ all_datacenters }}"
+  register: async_results
+
+- debug: 
+    msg: "{{ async_results }}"
+
+- name: Lauch async jobs to achieve parallelism
+  win_shell: c:\scripts\test1.ps1 {{ item.0 }} {{ item.1 }} {{ item.2 }} {{ item.3}} >> c:\scripts\test1.log
   async: 45
   poll: 0
   with_nested:
     - "{{ os_list }}"
     - "{{ all_datacenters }}"
   register: async_results
+
 - name: Check sync status
   async_status:
     jid: "{{ async_result_item.ansible_job_id }}"
@@ -28,4 +43,3 @@
   until: async_poll_results.finished
   retries: 30
 
-  
