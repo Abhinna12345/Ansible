@@ -1,27 +1,29 @@
-defaults
-        log     global
-        mode    tcp
-        option  httplog
-        option  dontlognull
-        timeout connect 5000
-        timeout client  50000
-        timeout server  50000
-        errorfile 400 /etc/haproxy/errors/400.http
-        errorfile 403 /etc/haproxy/errors/403.http
-        errorfile 408 /etc/haproxy/errors/408.http
-        errorfile 500 /etc/haproxy/errors/500.http
-        errorfile 502 /etc/haproxy/errors/502.http
-        errorfile 503 /etc/haproxy/errors/503.http
-        errorfile 504 /etc/haproxy/errors/504.http
-frontend firstbalance
-        bind 192.168.222.104:80
-        default_backend webservers
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+          - myvars.yml
+  tasks:
+   - add_host:
+        name: '{{ new_host }}'
+     args: '{{ new_host_vars }}'
+  vars:
+     new_host: "{{ ipaddress }}"
+     new_host_vars:
+         ansible_user: "{{ secret.win_user }}"
+         ansible_password: "{{ secret.win_pwd }}"
+         ansible_connection: winrm
+         ansible_winrm_server_cert_validation: ignore
+- hosts: "{{ ipaddress }}"
+  gather_facts: no
+  tasks:
+  - name: Run win command
+    win_command: whoami
+    register: whoami_out
+  - name: print
+    debug:
+       msg: "{{ whoami_out }}"
+  - debug: var=ansible_user
+    delegate_to: localhost
 
-backend webservers
-        option httpchk GET /version/index.html
-        http-check expect rstatus (2|3)[0-9][0-9]
-        balance roundrobin
-        server webserver1 192.168.222.102:80 check
-        server webserver2 192.168.222.103:80 check
-
-"/etc/haproxy/haproxy.cfg" 48L, 1604C                                 
