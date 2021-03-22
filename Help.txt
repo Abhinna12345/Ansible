@@ -27,3 +27,27 @@
   - debug: var=ansible_user
     delegate_to: localhost
 
+
+$vcenter ='IP of vCenter'
+$vcuser = 'vCenter User'
+$vcpass = 'vCenter Pass'
+ 
+Connect-VIServer $vcenter -user $vcuser -pass $vcpass
+ 
+$sourcehost = get-vmhost 'Source Hostname/IP'
+$destinationhost = get-vmhost 'Target Hostname/IP'
+ 
+#get all templates on source host
+$templates = get-template -Location $sourcehost
+ 
+foreach ($template in $templates)
+{
+    # convert template to VM
+    Set-Template $template -ToVM -confirm:$False
+    # ensure it is running on my source host
+    Get-VM -Name $template | Move-VM -Destination $sourcehost
+    # migrate vm to new cluster
+    Get-VM -Name $template | Move-VM -Destination $destinationhost
+    # convert back to a template
+    Get-VM -Name $template | Set-VM -ToTemplate -Confirm:$false
+}
