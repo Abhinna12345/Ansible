@@ -3,15 +3,15 @@
   connection: local
   gather_facts: no
   vars:
-     server: server1.campus.nist.gov
-     acceptable_domains: ['nist', 'campus']
+     server: server1.samlple1.sample2.net
+     acceptable_domains: ['sample1', 'sample2']
   tasks:
   - name: Debug
     debug:
-      msg: "{% if server.split('.')[1] in acceptable_domains %}campus{% else %}{{server.split('.')[1]}}{% endif %}"
+      msg: "{% if server.split('.')[1] in acceptable_domains %}sample1{% else %}{{server.split('.')[1]}}{% endif %}"
   - name: Run win command
     set_fact:
-      dns_domain: "{% if server.split('.')[1] in acceptable_domains %}campus.nist.gov{% else %}{{server.split('.')[1]}}{% endif %}"
+      dns_domain: "{% if server.split('.')[1] in acceptable_domains %}sample1.sample2.gov{% else %}{{server.split('.')[1]}}{% endif %}"
   - name: Debug
     debug:
       msg: "{{ dns_domain }}"
