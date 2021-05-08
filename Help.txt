@@ -2,52 +2,18 @@
 - hosts: localhost
   connection: local
   gather_facts: no
-  vars_files:
-          - myvars.yml
-  tasks:
-   - add_host:
-        name: '{{ new_host }}'
-     args: '{{ new_host_vars }}'
   vars:
-     new_host: "{{ ipaddress }}"
-     new_host_vars:
-         ansible_user: "{{ secret.win_user }}"
-         ansible_password: "{{ secret.win_pwd }}"
-         ansible_connection: winrm
-         ansible_winrm_server_cert_validation: ignore
-- hosts: "{{ ipaddress }}"
-  gather_facts: no
+     server: server1.campus.nist.gov
+     acceptable_domains: ['nist', 'campus']
   tasks:
-  - name: Run win command
-    win_command: whoami
-    register: whoami_out
-  - name: print
+  - name: Debug
     debug:
-       msg: "{{ whoami_out }}"
-  - debug: var=ansible_user
-    delegate_to: localhost
-
-
-$vcenter ='IP of vCenter'
-$vcuser = 'vCenter User'
-$vcpass = 'vCenter Pass'
- 
-Connect-VIServer $vcenter -user $vcuser -pass $vcpass
- 
-$sourcehost = get-vmhost 'Source Hostname/IP'
-$destinationhost = get-vmhost 'Target Hostname/IP'
- 
-#get all templates on source host
-$templates = get-template -Location $sourcehost
- 
-foreach ($template in $templates)
-{
-    # convert template to VM
-    Set-Template $template -ToVM -confirm:$False
-    # ensure it is running on my source host
-    Get-VM -Name $template | Move-VM -Destination $sourcehost
-    # migrate vm to new cluster
-    Get-VM -Name $template | Move-VM -Destination $destinationhost
-    # convert back to a template
-    Get-VM -Name $template | Set-VM -ToTemplate -Confirm:$false
-}
+      msg: "{% if server.split('.')[1] in acceptable_domains %}campus{% else %}{{server.split('.')[1]}}{% endif %}"
+  - name: Run win command
+    set_fact:
+      dns_domain: "{% if server.split('.')[1] in acceptable_domains %}campus.nist.gov{% else %}{{server.split('.')[1]}}{% endif %}"
+  - name: Debug
+    debug:
+      msg: "{{ dns_domain }}"
+  - fail: msg="{{ dns_domain }} is an unsupported domain"
+    when: dns_domain not in acceptable_domains
