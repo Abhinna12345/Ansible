@@ -9,16 +9,12 @@
   - name: Debug
     debug:
       msg: "{% if guest_host_name.split('.')[1] in acceptable_domains %}domain{% else %}{{guest_host_name.split('.')[1]}}{% endif %}"
-  #If domain name is domain.rootNode.com or rootNode.com, dns_domain_name is domain.rootNode.com
-  #Else
-  ##   domain name is incoming domain name
-  #If dns_domain_name is not domain.rootNode.com, throw error amd donot join the server to AD
-  #
   - name: Get DNS Domain Name
     set_fact:
-      domains: "{{ guest_host_name.split('.')}}"
+     parts: "{{ guest_host_name.split('.')}}"
   - set_fact:
-      dns_domain: "{% if guest_host_name.split('.')[1] in acceptable_domains %}domain.rootNode.com{% else %}{{ domains|reject('search',domains[0])|list|join('.') }}{% endif %}"
+      dns_domain: "{% if guest_host_name.split('.')[1] in acceptable_domains %}domain.rootNode.com{% else %}{{ parts|reject('search',parts[0])|list|join('.') }}{% endif %}"
   - debug:
       msg:
        - "dns_domain is {{ dns_domain }}"
+
