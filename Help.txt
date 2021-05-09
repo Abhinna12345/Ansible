@@ -3,17 +3,22 @@
   connection: local
   gather_facts: no
   vars:
-     server: server1.samlple1.sample2.net
-     acceptable_domains: ['sample1', 'sample2']
+     guest_host_name: server1.domain.rootNode.com
+     acceptable_domains: ['rootNode', 'domain']
   tasks:
   - name: Debug
     debug:
-      msg: "{% if server.split('.')[1] in acceptable_domains %}sample1{% else %}{{server.split('.')[1]}}{% endif %}"
-  - name: Run win command
+      msg: "{% if guest_host_name.split('.')[1] in acceptable_domains %}domain{% else %}{{guest_host_name.split('.')[1]}}{% endif %}"
+  #If domain name is domain.rootNode.com or rootNode.com, dns_domain_name is domain.rootNode.com
+  #Else
+  ##   domain name is incoming domain name
+  #If dns_domain_name is not domain.rootNode.com, throw error amd donot join the server to AD
+  #
+  - name: Get DNS Domain Name
     set_fact:
-      dns_domain: "{% if server.split('.')[1] in acceptable_domains %}sample1.sample2.gov{% else %}{{server.split('.')[1]}}{% endif %}"
-  - name: Debug
-    debug:
-      msg: "{{ dns_domain }}"
-  - fail: msg="{{ dns_domain }} is an unsupported domain"
-    when: dns_domain not in acceptable_domains
+      domains: "{{ guest_host_name.split('.')}}"
+  - set_fact:
+      dns_domain: "{% if guest_host_name.split('.')[1] in acceptable_domains %}domain.rootNode.com{% else %}{{ domains|reject('search',domains[0])|list|join('.') }}{% endif %}"
+  - debug:
+      msg:
+       - "dns_domain is {{ dns_domain }}"
