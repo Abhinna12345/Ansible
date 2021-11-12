@@ -1,0 +1,82 @@
+variables:
+  NUGET_PATH: 'C:\Tools\Nuget\nuget.exe'
+  MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\msbuild.exe'
+  XUNIT_PATH: packages\xunit.runner.console.2.3.1\tools\net452
+  UNITTEST_FOLDER: '.\tests\CiCdExample.Tests\bin\Release\'
+  WebSiteName: RANDR
+  WebSitePath: C:\InetPub\wwwroot\RANDR
+#When the entire project is cloned to the server where the Runner is located, the script in this will be executed first. 
+before_script:
+  - cd src
+
+ # Job that will be executed
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  only:
+    - branches
+  script:
+    - '& "$env:NUGET_PATH" restore'
+    - '& "$env:MSBUILD_PATH" /p:Configuration=Release /clp:ErrorsOnly'
+    - '& "$env:MSBUILD_PATH" src\CiCdExample\CiCdExample.csproj /p:DeployOnBuild=true /p:Configuration=Release /P:PublishProfile=FolderProfile.pubxml'
+  artifacts:
+    expire_in: 2 days
+    paths:
+      - '.\src\CiCdExample\bin\Release\Publish\'
+      - '$env:UNITTEST_FOLDER'
+      - '.\$env:XUNIT_PATH\*.*'
+ # Check code
+test:
+  stage: test
+     # Script to be executed
+  only:
+    - master
+  script:
+    - dotnet restore
+    - dotnet build
+     # Which branch will be executed
+  dependencies:
+    - build
+  #runner The tag when registering, here refers to the runner that will be triggered
+  tags:
+    - deploy
+
+ # Deployment
+deploy:
+  stage: deploy
+  # Which branch will be executed
+  only:
+    - master
+  # Script to be executed
+  script:
+         # Declare a variable to save the current time as the name of the backup data folder
+    - $datetime=Get-Date -Format 'yyyy-MM-dd-HH-mm'
+         # Compile the packaged project
+    - dotnet publish -c release -r win81-x64
+         # Enter the compiled project directory
+    - cd $env:ProjectName\bin\Release\netcoreapp2.2\win81-x64\
+         # Stop IIS corresponding site
+    - C:\Windows\System32\inetsrv\appcmd.exe stop site $env:WebSiteName
+         # Stop process pool
+    - C:\Windows\System32\inetsrv\appcmd.exe stop apppool /apppool.name:"$env:WebSiteName"
+         # Back up the original project file, project name_current time
+    - cp "$env:WebSitePath" "$env:WebSitePath$datetime" -Recurse
+         # Delete original site
+    - del "$env:WebSitePath" -Recurse
+      # Deploy from Publish folder
+    - 'xcopy /y /s ".\Publish\*.*" "$env:WebSitePath"'
+         # Start process pool
+    - C:\Windows\System32\inetsrv\appcmd.exe start apppool /apppool.name:"$env:WebSiteName"
+         # Start IIS site
+    - C:\Windows\System32\inetsrv\appcmd.exe start site $env:WebSiteName
+ 
+  dependencies:
+    - build
+    - test
+  #runner The tag when registering, here refers to the runner that will be triggered
+  tags:
+    - deploy
